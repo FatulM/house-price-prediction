@@ -69,7 +69,11 @@ feature_types: pd.Series = pd.Series(
     ],
     name='type',
 )
-feature_types.to_csv('data/feature_types.csv')
+feature_types.to_csv(
+    'data/feature_types.csv',
+    float_format='%g',
+    na_rep="",
+)
 
 mSSubClass_cats = np.array([20, 30, 40, 45, 50, 60, 70, 75, 80, 85, 90, 120, 150, 160, 180, 190])
 mSZoning_cats = np.array(['A', 'C', 'FV', 'I', 'RH', 'RL', 'RP', 'RM'])
@@ -240,6 +244,7 @@ train_data = pd.concat([features_fixed, target.to_frame()], axis='columns', copy
 train_data.to_csv(
     'data/train.csv',
     float_format='%g',
+    na_rep="",
 )
 
 test_raw = pd.read_csv(
@@ -259,6 +264,7 @@ test_data = test_features_fixed.copy()
 test_data.to_csv(
     'data/test.csv',
     float_format='%g',
+    na_rep="",
 )
 
 
