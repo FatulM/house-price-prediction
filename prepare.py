@@ -20,7 +20,7 @@ class NpEncoder(json.JSONEncoder):
 houses_raw = pd.read_csv(
     f'input/train.csv',
     na_values=['', 'NA'],
-    # keep_default_na=False, todo
+    keep_default_na=False,
     index_col=0,
 ).convert_dtypes()
 
@@ -227,7 +227,7 @@ def fix_MasVnrNAs(df):
     df.loc[
         df['MasVnrArea'] == 0,
         'MasVnrType'
-    ] = masVnrType_cats[3]
+    ] = masVnrType_cats[3]  # None
 
 
 fix_MasVnrNAs(features_fixed)
@@ -245,7 +245,7 @@ train_data.to_csv(
 test_raw = pd.read_csv(
     f'input/test.csv',
     na_values=['', 'NA'],
-    # keep_default_na=False, todo
+    keep_default_na=False,
     index_col=0,
 ).convert_dtypes()
 
