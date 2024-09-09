@@ -1,0 +1,256 @@
+# Import:
+
+import pandas as pd
+import numpy as np
+import sklearn
+
+from typing import Any
+
+from sklearn.datasets import *
+from sklearn.cluster import *
+from sklearn.base import *
+from sklearn.metrics import *
+from sklearn.metrics.pairwise import *
+from sklearn.impute import *
+from sklearn.preprocessing import *
+from sklearn.linear_model import *
+from sklearn.compose import *
+from sklearn.utils.validation import *
+from sklearn.pipeline import *
+from sklearn.metrics import *
+from sklearn.tree import *
+from sklearn.model_selection import *
+from sklearn.ensemble import *
+from sklearn.datasets import *
+from sklearn.dummy import *
+from sklearn.calibration import *
+from sklearn.svm import *
+from sklearn.multiclass import *
+from sklearn.neighbors import *
+from sklearn.multioutput import *
+from sklearn.decomposition import *
+
+# Config:
+
+sklearn.set_config(transform_output='pandas')
+
+# Load Data:
+
+train_df: pd.DataFrame = pd.read_csv(
+    f'input/train.csv',
+    na_values=[''],
+    keep_default_na=False,
+    index_col=0,
+)
+test_df: pd.DataFrame = pd.read_csv(
+    f'input/test.csv',
+    na_values=[''],
+    keep_default_na=False,
+    index_col=0,
+)
+
+# Extract Data:
+
+train_ids: np.ndarray = train_df.index.to_numpy()
+train_X: pd.DataFrame = train_df.drop(columns=['SalePrice']).reset_index(drop=True)
+train_y: np.ndarray = train_df['SalePrice'].to_numpy()
+test_ids: np.ndarray = test_df.index.to_numpy()
+test_X: pd.DataFrame = test_df.reset_index(drop=True)
+
+# Names:
+
+features: list[str] = train_X.columns.tolist()
+
+# Types:
+
+type_features: dict[str, list[str]] = {
+    'nominal': [
+        'MSSubClass', 'MSZoning', 'Street', 'Alley', 'LandContour', 'LotConfig', 'Neighborhood', 'Condition1',
+        'Condition2', 'BldgType', 'HouseStyle', 'RoofStyle', 'RoofMatl', 'Exterior1st', 'Exterior2nd', 'MasVnrType',
+        'Foundation', 'Heating', 'CentralAir', 'Electrical', 'GarageType', 'PavedDrive', 'MiscFeature', 'MoSold',
+        'SaleType', 'SaleCondition',
+    ],
+    'ordinal': [
+        'LotShape', 'Utilities', 'LandSlope', 'OverallQual', 'OverallCond', 'ExterQual', 'ExterCond', 'BsmtQual',
+        'BsmtCond', 'BsmtExposure', 'BsmtFinType1', 'BsmtFinType2', 'HeatingQC', 'KitchenQual', 'Functional',
+        'FireplaceQu', 'GarageFinish', 'GarageQual', 'GarageCond', 'PoolQC', 'Fence',
+    ],
+    'numerical': [
+        'LotFrontage', 'LotArea', 'YearBuilt', 'YearRemodAdd', 'MasVnrArea', 'BsmtFinSF1', 'BsmtFinSF2', 'BsmtUnfSF',
+        'TotalBsmtSF', '1stFlrSF', '2ndFlrSF', 'LowQualFinSF', 'GrLivArea', 'BsmtFullBath', 'BsmtHalfBath', 'FullBath',
+        'HalfBath', 'BedroomAbvGr', 'KitchenAbvGr', 'TotRmsAbvGrd', 'Fireplaces', 'GarageYrBlt', 'GarageCars',
+        'GarageArea', 'WoodDeckSF', 'OpenPorchSF', 'EnclosedPorch', '3SsnPorch', 'ScreenPorch', 'PoolArea', 'MiscVal',
+        'YrSold',
+    ],
+}
+
+assert np.array_equal([f for f in features if f in type_features['nominal']], type_features['nominal'])
+assert np.array_equal([f for f in features if f in type_features['ordinal']], type_features['ordinal'])
+assert np.array_equal([f for f in features if f in type_features['numerical']], type_features['numerical'])
+
+feature_types: dict[str, str] = {
+    feature: 'nominal' if feature in type_features['nominal'] else
+    'ordinal' if feature in type_features['ordinal'] else
+    'numerical' if feature in type_features['numerical'] else
+    str(1 / 0)
+    for feature in features
+}
+
+assert np.array_equal(list(feature_types.keys()), features)
+
+# Cats and Levels:
+
+discrete_values: dict[str, list[Any]] = {
+    'MSSubClass': [20, 30, 40, 45, 50, 60, 70, 75, 80, 85, 90, 120, 150, 160, 180, 190],
+    'MSZoning': ['A', 'C', 'FV', 'I', 'RH', 'RL', 'RP', 'RM'],
+    'Street': ['Grvl', 'Pave'],
+    'Alley': ['Grvl', 'Pave', 'NA'],
+    'LotShape': ['Reg', 'IR1', 'IR2', 'IR3'],
+    'LandContour': ['Lvl', 'Bnk', 'HLS', 'Low'],
+    'Utilities': ['AllPub', 'NoSewr', 'NoSeWa', 'ELO'],
+    'LotConfig': ['Inside', 'Corner', 'CulDSac', 'FR2', 'FR3'],
+    'LandSlope': ['Gtl', 'Mod', 'Sev'],
+    'Neighborhood': [
+        'Blmngtn', 'Blueste', 'BrDale', 'BrkSide', 'ClearCr', 'CollgCr', 'Crawfor', 'Edwards', 'Gilbert', 'IDOTRR',
+        'MeadowV', 'Mitchel', 'NAmes', 'NoRidge', 'NPkVill', 'NridgHt', 'NWAmes', 'OldTown', 'SWISU', 'Sawyer',
+        'SawyerW', 'Somerst', 'StoneBr', 'Timber', 'Veenker',
+    ],
+    'Condition1': ['Artery', 'Feedr', 'Norm', 'RRNn', 'RRAn', 'PosN', 'PosA', 'RRNe', 'RRAe'],
+    'Condition2': ['Artery', 'Feedr', 'Norm', 'RRNn', 'RRAn', 'PosN', 'PosA', 'RRNe', 'RRAe'],
+    'BldgType': ['1Fam', '2FmCon', 'Duplx', 'TwnhsE', 'TwnhsI'],
+    'HouseStyle': ['1Story', '1.5Fin', '1.5Unf', '2Story', '2.5Fin', '2.5Unf', 'SFoyer', 'SLvl'],
+    'OverallQual': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    'OverallCond': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    'RoofStyle': ['Flat', 'Gable', 'Gambrel', 'Hip', 'Mansard', 'Shed'],
+    'RoofMatl': ['ClyTile', 'CompShg', 'Membran', 'Metal', 'Roll', 'Tar&Grv', 'WdShake', 'WdShngl'],
+    'Exterior1st': [
+        'AsbShng', 'AsphShn', 'BrkComm', 'BrkFace', 'CBlock', 'CemntBd', 'HdBoard', 'ImStucc', 'MetalSd', 'Other',
+        'Plywood', 'PreCast', 'Stone', 'Stucco', 'VinylSd', 'Wd Sdng', 'WdShing',
+    ],
+    'Exterior2nd': [
+        'AsbShng', 'AsphShn', 'BrkComm', 'BrkFace', 'CBlock', 'CemntBd', 'HdBoard', 'ImStucc', 'MetalSd', 'Other',
+        'Plywood', 'PreCast', 'Stone', 'Stucco', 'VinylSd', 'Wd Sdng', 'WdShing',
+    ],
+    'MasVnrType': ['BrkCmn', 'BrkFace', 'CBlock', 'None', 'Stone'],
+    'ExterQual': ['Ex', 'Gd', 'TA', 'Fa', 'Po'],
+    'ExterCond': ['Ex', 'Gd', 'TA', 'Fa', 'Po'],
+    'Foundation': ['BrkTil', 'CBlock', 'PConc', 'Slab', 'Stone', 'Wood'],
+    'BsmtQual': ['Ex', 'Gd', 'TA', 'Fa', 'Po', 'NA'],
+    'BsmtCond': ['Ex', 'Gd', 'TA', 'Fa', 'Po', 'NA'],
+    'BsmtExposure': ['Gd', 'Av', 'Mn', 'No', 'NA'],
+    'BsmtFinType1': ['GLQ', 'ALQ', 'BLQ', 'Rec', 'LwQ', 'Unf', 'NA'],
+    'BsmtFinType2': ['GLQ', 'ALQ', 'BLQ', 'Rec', 'LwQ', 'Unf', 'NA'],
+    'Heating': ['Floor', 'GasA', 'GasW', 'Grav', 'OthW', 'Wall'],
+    'HeatingQC': ['Ex', 'Gd', 'TA', 'Fa', 'Po'],
+    'CentralAir': ['N', 'Y'],
+    'Electrical': ['SBrkr', 'FuseA', 'FuseF', 'FuseP', 'Mix'],
+    'KitchenQual': ['Ex', 'Gd', 'TA', 'Fa', 'Po'],
+    'Functional': ['Typ', 'Min1', 'Min2', 'Mod', 'Maj1', 'Maj2', 'Sev', 'Sal'],
+    'FireplaceQu': ['Ex', 'Gd', 'TA', 'Fa', 'Po', 'NA'],
+    'GarageType': ['2Types', 'Attchd', 'Basment', 'BuiltIn', 'CarPort', 'Detchd', 'NA'],
+    'GarageFinish': ['Fin', 'RFn', 'Unf', 'NA'],
+    'GarageQual': ['Ex', 'Gd', 'TA', 'Fa', 'Po', 'NA'],
+    'GarageCond': ['Ex', 'Gd', 'TA', 'Fa', 'Po', 'NA'],
+    'PavedDrive': ['Y', 'P', 'N'],
+    'PoolQC': ['Ex', 'Gd', 'TA', 'Fa', 'NA'],
+    'Fence': ['GdPrv', 'MnPrv', 'GdWo', 'MnWw', 'NA'],
+    'MiscFeature': ['Elev', 'Gar2', 'Othr', 'Shed', 'TenC', 'NA'],
+    'MoSold': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+    'SaleType': ['WD', 'CWD', 'VWD', 'New', 'COD', 'Con', 'ConLw', 'ConLI', 'ConLD', 'Oth'],
+    'SaleCondition': ['Normal', 'Abnorml', 'AdjLand', 'Alloca', 'Family', 'Partial'],
+}
+
+assert np.array_equal([f for f in features if f in discrete_values.keys()], list(discrete_values.keys()))
+assert np.array_equal([f for f, t in feature_types.items() if t != 'numerical'], list(discrete_values.keys()))
+
+# Fix Typos:
+
+typo_mapping_base: dict[str, dict[Any, Any]] = {
+    'MSZoning': {
+        'C (all)': 'C',
+    },
+    'BldgType': {
+        '2fmCon': '2FmCon',
+        'Duplex': 'Duplx',
+        'Twnhs': 'TwnhsI',
+    },
+    'Exterior2nd': {
+        'Brk Cmn': 'BrkComm',
+        'CmentBd': 'CemntBd',
+        'Wd Shng': 'WdShing',
+    },
+}
+
+typo_mapping: dict[str, dict[Any, Any]] = {
+    f: (typo_mapping_base.get(f) or {}) |
+       ({} if (t != 'numerical' and 'NA' in discrete_values[f]) else {'NA': np.nan})
+    for f, t in feature_types.items()
+}
+
+
+def fix_typos(df: pd.DataFrame) -> pd.DataFrame:
+    return df.replace(typo_mapping)
+
+
+typo_fixer = FunctionTransformer(fix_typos)
+
+
+def check_cats(df: pd.DataFrame) -> None:
+    non_numeric_features = [f for f, t in feature_types.items() if t != 'numerical']
+    for f in non_numeric_features:
+        assert set(df[f].dropna().unique()) <= set(discrete_values[f])
+
+
+check_cats(train_X.replace(typo_mapping))
+check_cats(test_X.replace(typo_mapping))
+
+
+# Fix Dtypes:
+
+def fix_dtypes(df: pd.DataFrame) -> pd.DataFrame:
+    out_df = df.copy()
+    for f in type_features['numerical']:
+        out_df[f] = out_df[f].map(int, na_action='ignore')
+    return out_df
+
+
+dtype_fixer = FunctionTransformer(fix_dtypes)
+
+
+# Fix Some of Masonry Veneer NAs:
+
+def fix_masonry_veneer(df: pd.DataFrame) -> pd.DataFrame:
+    out_df = df.copy()
+    out_df.loc[
+        out_df['MasVnrArea'] == 0,
+        'MasVnrType'
+    ] = 'None'
+    return out_df
+
+
+masonry_veneer_fixer = FunctionTransformer(fix_masonry_veneer)
+
+
+# Fix Remod Times:
+
+def fix_remod_times(df: pd.DataFrame) -> pd.DataFrame:
+    out_df = df.copy()
+    indices = out_df["YrSold"] < out_df["YearRemodAdd"]
+    out_df.loc[indices, "YearRemodAdd"] = out_df.loc[indices, "YearBuilt"]
+    return out_df
+
+
+remod_times_fixer = FunctionTransformer(fix_remod_times)
+
+# Preprocess Pipeline:
+
+preprocess = Pipeline([
+    ('typo_fixer', typo_fixer),
+    ('dtype_fixer', dtype_fixer),
+    ('masonry_veneer_fixer', masonry_veneer_fixer),
+    ('remod_times_fixer', remod_times_fixer),
+], verbose=False)
+
+# TODO:
+
+print(preprocess.fit_transform(train_X).isna().sum().to_frame(name='count').query('count > 0'))
