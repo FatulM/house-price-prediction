@@ -352,7 +352,6 @@ pipeline = Pipeline([
     ('fixer', fixer),
     ('imputer', imputer),
     ('encoder', encoder),
-    # ('int_typer', FunctionTransformer(lambda df: df.astype(int))), # all of our data is in int type ...
     ('standardizer', standardizer),
 ], verbose=False)
 
