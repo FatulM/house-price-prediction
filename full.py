@@ -1,34 +1,6 @@
 # Import:
 
-import pandas as pd
-import numpy as np
-import sklearn
-
-from typing import Any
-
-from sklearn.datasets import *
-from sklearn.cluster import *
-from sklearn.base import *
-from sklearn.metrics import *
-from sklearn.metrics.pairwise import *
-from sklearn.impute import *
-from sklearn.preprocessing import *
-from sklearn.linear_model import *
-from sklearn.compose import *
-from sklearn.utils.validation import *
-from sklearn.pipeline import *
-from sklearn.metrics import *
-from sklearn.tree import *
-from sklearn.model_selection import *
-from sklearn.ensemble import *
-from sklearn.datasets import *
-from sklearn.dummy import *
-from sklearn.calibration import *
-from sklearn.svm import *
-from sklearn.multiclass import *
-from sklearn.neighbors import *
-from sklearn.multioutput import *
-from sklearn.decomposition import *
+from _imports import *
 
 # Config:
 
@@ -309,9 +281,9 @@ def fix_dots(df: pd.DataFrame) -> pd.DataFrame:
 
 dot_fixer = FunctionTransformer(fix_dots)
 
-# Preprocess Pipeline:
+# Fixer Pipeline:
 
-preprocess = Pipeline([
+fixer = Pipeline([
     ('typo_fixer', typo_fixer),
     ('dtype_fixer', dtype_fixer),
     ('masonry_veneer_fixer', masonry_veneer_fixer),
@@ -321,10 +293,10 @@ preprocess = Pipeline([
     ('dot_fixer', dot_fixer),
 ], verbose=False)
 
-# Do Preprocessing:
+# Do Fixing:
 
-train_X_fixed: pd.DataFrame = preprocess.fit_transform(train_X)
-test_X_fixed: pd.DataFrame = preprocess.transform(test_X)
+train_X_fixed: pd.DataFrame = fixer.fit_transform(train_X)
+test_X_fixed: pd.DataFrame = fixer.transform(test_X)
 
 # Save Data:
 
