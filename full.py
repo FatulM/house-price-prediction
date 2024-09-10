@@ -265,6 +265,55 @@ def fix_discrete_types(df: pd.DataFrame) -> pd.DataFrame:
 
 discrete_type_fixer = FunctionTransformer(fix_discrete_types)
 
+# Fix NA Names:
+
+discrete_na_containing_features: list[str] = [
+    k
+    for k, v in discrete_strs.items()
+    if 'NA' in v
+]
+
+discrete_na_name_mapping: dict[str, dict[str, str]] = {
+    f: {
+        'NA': 'CNA',
+    }
+    for f in discrete_na_containing_features
+}
+
+discrete_na: dict[str, list[str]] = {
+    k: ['CNA' if vi == 'NA' else vi for vi in v] if k in discrete_na_containing_features else v
+    for k, v in discrete_strs.items()
+}
+
+
+def fix_na_names(df: pd.DataFrame) -> pd.DataFrame:
+    return df.replace(discrete_na_name_mapping)
+
+
+na_names_fixer = FunctionTransformer(fix_na_names)
+
+# Fix dots:
+
+discrete: dict[str, list[str]] = discrete_na | {
+    'HouseStyle': ['1Story', '1d5Fin', '1d5Unf', '2Story', '2d5Fin', '2d5Unf', 'SFoyer', 'SLvl'],
+}
+
+dot_mapping: dict[str, dict[str, str]] = {
+    'HouseStyle': {
+        '1.5Fin': '1d5Fin',
+        '1.5Unf': '1d5Unf',
+        '2.5Fin': '2d5Fin',
+        '2.5Unf': '2d5Unf',
+    }
+}
+
+
+def fix_dots(df: pd.DataFrame) -> pd.DataFrame:
+    return df.replace(dot_mapping)
+
+
+dot_fixer = FunctionTransformer(fix_dots)
+
 # Preprocess Pipeline:
 
 preprocess = Pipeline([
@@ -273,6 +322,8 @@ preprocess = Pipeline([
     ('masonry_veneer_fixer', masonry_veneer_fixer),
     ('remod_times_fixer', remod_times_fixer),
     ('discrete_type_fixer', discrete_type_fixer),
+    ('na_names_fixer', na_names_fixer),
+    ('dot_fixer', dot_fixer),
 ], verbose=False)
 
 # Do Preprocessing:
@@ -307,10 +358,10 @@ pd.Series(
 # Save Some Meta Data:
 
 pd.Series(
-    index=pd.Index(discrete_strs.keys(), name='feature'),
+    index=pd.Index(discrete.keys(), name='feature'),
     data=[
         '|'.join(vs)
-        for vs in discrete_strs.values()
+        for vs in discrete.values()
     ],
     name='values',
 ).to_csv(
