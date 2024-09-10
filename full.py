@@ -251,7 +251,7 @@ discrete_int_features: list[str] = [
 ]
 
 discrete_strs: dict[str, list[str]] = {
-    k: [str(vi) for vi in v]
+    k: [f'C{vi}' for vi in v] if k in discrete_int_features else v
     for k, v in discrete_values.items()
 }
 
@@ -259,7 +259,7 @@ discrete_strs: dict[str, list[str]] = {
 def fix_discrete_types(df: pd.DataFrame) -> pd.DataFrame:
     out_df = df.copy()
     for f in discrete_int_features:
-        out_df[f] = out_df[f].map(str, na_action='ignore')
+        out_df[f] = out_df[f].map('C{}'.format, na_action='ignore')
     return out_df
 
 
@@ -275,6 +275,62 @@ preprocess = Pipeline([
     ('discrete_type_fixer', discrete_type_fixer),
 ], verbose=False)
 
-# TODO:
+# Do Preprocessing:
 
-print(preprocess.fit_transform(train_X).isna().sum().to_frame(name='count').query('count > 0'))
+train_X_fixed: pd.DataFrame = preprocess.fit_transform(train_X)
+test_X_fixed: pd.DataFrame = preprocess.transform(test_X)
+
+# Save Data:
+
+train_X_fixed.to_csv(
+    'tmp/train_X.csv',
+    na_rep='',
+    index=False,
+    float_format='%g',
+)
+test_X_fixed.to_csv(
+    'tmp/test_X.csv',
+    na_rep='',
+    index=False,
+    float_format='%g',
+)
+pd.Series(
+    train_y,
+    name='SalePrice',
+).to_csv(
+    'tmp/train_y.csv',
+    na_rep='',
+    index=False,
+    float_format='%g',
+)
+
+# Save Some Meta Data:
+
+pd.Series(
+    index=pd.Index(discrete_strs.keys(), name='feature'),
+    data=[
+        '|'.join(vs)
+        for vs in discrete_strs.values()
+    ],
+    name='values',
+).to_csv(
+    'tmp/meta/discrete.csv',
+    na_rep='',
+    index=True,
+    float_format='%g',
+)
+
+pd.Series(
+    index=pd.Index(feature_types.keys(), name='feature'),
+    data=feature_types.values(),
+    name='type',
+).to_csv(
+    'tmp/meta/types.csv',
+    na_rep='',
+    index=True,
+    float_format='%g',
+)
+
+# Show Some Stats:
+
+print(train_X_fixed.isna().sum().to_frame(name='count').query('count > 0'))
