@@ -235,12 +235,35 @@ masonry_veneer_fixer = FunctionTransformer(fix_masonry_veneer)
 
 def fix_remod_times(df: pd.DataFrame) -> pd.DataFrame:
     out_df = df.copy()
-    indices = out_df["YrSold"] < out_df["YearRemodAdd"]
-    out_df.loc[indices, "YearRemodAdd"] = out_df.loc[indices, "YearBuilt"]
+    indices = out_df['YrSold'] < out_df['YearRemodAdd']
+    out_df.loc[indices, 'YearRemodAdd'] = out_df.loc[indices, 'YearBuilt']
     return out_df
 
 
 remod_times_fixer = FunctionTransformer(fix_remod_times)
+
+# Fix Discrete Types:
+
+discrete_int_features: list[str] = [
+    k
+    for k, v in discrete_values.items()
+    if type(v[0]) is not str
+]
+
+discrete_strs: dict[str, list[str]] = {
+    k: [str(vi) for vi in v]
+    for k, v in discrete_values.items()
+}
+
+
+def fix_discrete_types(df: pd.DataFrame) -> pd.DataFrame:
+    out_df = df.copy()
+    for f in discrete_int_features:
+        out_df[f] = out_df[f].map(str, na_action='ignore')
+    return out_df
+
+
+discrete_type_fixer = FunctionTransformer(fix_discrete_types)
 
 # Preprocess Pipeline:
 
@@ -249,6 +272,7 @@ preprocess = Pipeline([
     ('dtype_fixer', dtype_fixer),
     ('masonry_veneer_fixer', masonry_veneer_fixer),
     ('remod_times_fixer', remod_times_fixer),
+    ('discrete_type_fixer', discrete_type_fixer),
 ], verbose=False)
 
 # TODO:
