@@ -37,13 +37,13 @@ sklearn.set_config(transform_output='pandas')
 # Load Data:
 
 train_df: pd.DataFrame = pd.read_csv(
-    f'input/train.csv',
+    'input/train.csv',
     na_values=[''],
     keep_default_na=False,
     index_col=0,
 )
 test_df: pd.DataFrame = pd.read_csv(
-    f'input/test.csv',
+    'input/test.csv',
     na_values=[''],
     keep_default_na=False,
     index_col=0,
@@ -267,21 +267,16 @@ discrete_type_fixer = FunctionTransformer(fix_discrete_types)
 
 # Fix NA Names:
 
-discrete_na_containing_features: list[str] = [
-    k
-    for k, v in discrete_strs.items()
-    if 'NA' in v
-]
-
 discrete_na_name_mapping: dict[str, dict[str, str]] = {
     f: {
         'NA': 'CNA',
+        'None': 'CNone',
     }
-    for f in discrete_na_containing_features
+    for f in discrete_values.keys()
 }
 
 discrete_na: dict[str, list[str]] = {
-    k: ['CNA' if vi == 'NA' else vi for vi in v] if k in discrete_na_containing_features else v
+    k: ['CNA' if vi == 'NA' else 'CNone' if vi == 'None' else vi for vi in v]
     for k, v in discrete_strs.items()
 }
 
@@ -385,3 +380,5 @@ pd.Series(
 # Show Some Stats:
 
 print(train_X_fixed.isna().sum().to_frame(name='count').query('count > 0'))
+
+print(pd.read_csv('tmp/train_X.csv').isna().sum().to_frame(name='count').query('count > 0'))
