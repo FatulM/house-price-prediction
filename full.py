@@ -281,6 +281,18 @@ def fix_dots(df: pd.DataFrame) -> pd.DataFrame:
 
 dot_fixer = FunctionTransformer(fix_dots)
 
+# Fixer Pipeline:
+
+fixer = Pipeline([
+    ('typo_fixer', typo_fixer),
+    ('dtype_fixer', dtype_fixer),
+    ('masonry_veneer_fixer', masonry_veneer_fixer),
+    ('remod_times_fixer', remod_times_fixer),
+    ('discrete_type_fixer', discrete_type_fixer),
+    ('na_names_fixer', na_names_fixer),
+    ('dot_fixer', dot_fixer),
+], verbose=False)
+
 # Impute:
 
 imputer = ColumnTransformer(
@@ -294,23 +306,54 @@ imputer = ColumnTransformer(
     verbose_feature_names_out=False,
 )
 
-# Fixer Pipeline:
+# Encode:
 
-fixer = Pipeline([
-    ('typo_fixer', typo_fixer),
-    ('dtype_fixer', dtype_fixer),
-    ('masonry_veneer_fixer', masonry_veneer_fixer),
-    ('remod_times_fixer', remod_times_fixer),
-    ('discrete_type_fixer', discrete_type_fixer),
-    ('na_names_fixer', na_names_fixer),
-    ('dot_fixer', dot_fixer),
-], verbose=False)
+encoder = ColumnTransformer(
+    transformers=[
+        ('numerical', 'passthrough', type_features['numerical']),
+        ('ordinal', OneHotEncoder(
+            categories=[
+                discrete[f]
+                for f in type_features['ordinal']
+            ],
+            drop='first',
+            sparse_output=False,
+            handle_unknown='error',
+        ), type_features['ordinal']),
+        ('nominal', OneHotEncoder(
+            categories=[
+                discrete[f]
+                for f in type_features['nominal']
+            ],
+            drop='first',
+            sparse_output=False,
+            handle_unknown='error',
+        ), type_features['nominal']),
+    ],
+    remainder='drop',
+    verbose=False,
+    verbose_feature_names_out=False,
+)
 
-# pipeline:
+# Standardizer:
+
+standardizer = ColumnTransformer(
+    transformers=[
+        ('numerical', StandardScaler(), type_features['numerical']),
+    ],
+    remainder='passthrough',
+    verbose=False,
+    verbose_feature_names_out=False,
+)
+
+# Pipeline:
 
 pipeline = Pipeline([
     ('fixer', fixer),
     ('imputer', imputer),
+    ('encoder', encoder),
+    # ('int_typer', FunctionTransformer(lambda df: df.astype(int))), # all of our data is in int type ...
+    ('standardizer', standardizer),
 ], verbose=False)
 
 # Do Fixing:
@@ -371,5 +414,5 @@ pd.Series(
 
 # Show Some Stats:
 
-print(train_X_fixed.isna().sum().to_frame(name='count').query('count > 0'))
-print(test_X_fixed.isna().sum().to_frame(name='count').query('count > 0'))
+print(train_X_fixed.head())
+print(train_X_fixed.describe().T)
