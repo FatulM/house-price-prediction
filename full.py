@@ -281,6 +281,19 @@ def fix_dots(df: pd.DataFrame) -> pd.DataFrame:
 
 dot_fixer = FunctionTransformer(fix_dots)
 
+# Impute:
+
+imputer = ColumnTransformer(
+    transformers=[
+        ('numerical', SimpleImputer(strategy='median'), type_features['numerical']),
+        ('ordinal', SimpleImputer(strategy='most_frequent'), type_features['ordinal']),
+        ('nominal', SimpleImputer(strategy='most_frequent'), type_features['nominal']),
+    ],
+    remainder='drop',
+    verbose=False,
+    verbose_feature_names_out=False,
+)
+
 # Fixer Pipeline:
 
 fixer = Pipeline([
@@ -293,10 +306,17 @@ fixer = Pipeline([
     ('dot_fixer', dot_fixer),
 ], verbose=False)
 
+# pipeline:
+
+pipeline = Pipeline([
+    ('fixer', fixer),
+    ('imputer', imputer),
+], verbose=False)
+
 # Do Fixing:
 
-train_X_fixed: pd.DataFrame = fixer.fit_transform(train_X)
-test_X_fixed: pd.DataFrame = fixer.transform(test_X)
+train_X_fixed: pd.DataFrame = pipeline.fit_transform(train_X)
+test_X_fixed: pd.DataFrame = pipeline.transform(test_X)
 
 # Save Data:
 
@@ -352,5 +372,4 @@ pd.Series(
 # Show Some Stats:
 
 print(train_X_fixed.isna().sum().to_frame(name='count').query('count > 0'))
-
-print(pd.read_csv('tmp/train_X.csv').isna().sum().to_frame(name='count').query('count > 0'))
+print(test_X_fixed.isna().sum().to_frame(name='count').query('count > 0'))
