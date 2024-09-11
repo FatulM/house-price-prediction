@@ -65,10 +65,12 @@ random.seed = 110
 
 sklearn.set_config(transform_output="pandas")
 
-pio.templates.default = "plotly_dark"
 sns.set_theme(style="ticks", rc={"figure.figsize": (5, 5)})
-plt.style.use("dark_background")
 so.Plot.config.theme.update(sns.axes_style(style="ticks", rc={"figure.figsize": (5, 5)}))
+
+pio.templates.default = "seaborn"
+# pio.templates.default = "plotly_dark"
+# plt.style.use("dark_background")
 
 pd.options.plotting.backend = "matplotlib"
 
