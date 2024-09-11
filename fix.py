@@ -2,10 +2,6 @@
 
 from _imports import *
 
-# Config:
-
-sklearn.set_config(transform_output='pandas')
-
 # Load Data:
 
 train_df: pd.DataFrame = pd.read_csv(
@@ -14,6 +10,7 @@ train_df: pd.DataFrame = pd.read_csv(
     keep_default_na=False,
     index_col=0,
 )
+
 test_df: pd.DataFrame = pd.read_csv(
     'input/test.csv',
     na_values=[''],
@@ -319,7 +316,6 @@ pd.Series(
     name='SalePrice',
 ).to_csv(
     'data/train_y.csv',
-    na_rep='',
     index=False,
     float_format='%g',
 )
@@ -335,9 +331,7 @@ pd.Series(
     name='values',
 ).to_csv(
     'data/meta/discrete.csv',
-    na_rep='',
     index=True,
-    float_format='%g',
 )
 
 pd.Series(
@@ -346,7 +340,5 @@ pd.Series(
     name='type',
 ).to_csv(
     'data/meta/types.csv',
-    na_rep='',
     index=True,
-    float_format='%g',
 )
