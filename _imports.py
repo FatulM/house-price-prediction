@@ -36,29 +36,47 @@ import seaborn.objects as so
 import joblib
 
 import sklearn
-from sklearn.datasets import *
-from sklearn.cluster import *
 from sklearn.base import *
+from sklearn.calibration import *
+from sklearn.cluster import *
+from sklearn.compose import *
+from sklearn.covariance import *
+from sklearn.cross_decomposition import *
+from sklearn.datasets import *
+from sklearn.decomposition import *
+from sklearn.discriminant_analysis import *
+from sklearn.dummy import *
+from sklearn.ensemble import *
+from sklearn.exceptions import *
+from sklearn.experimental import *
+from sklearn.externals import *
+from sklearn.feature_extraction import *
+from sklearn.feature_selection import *
+from sklearn.gaussian_process import *
+from sklearn.impute import *
+from sklearn.inspection import *
+from sklearn.isotonic import *
+from sklearn.kernel_approximation import *
+from sklearn.kernel_ridge import *
+from sklearn.linear_model import *
+from sklearn.manifold import *
 from sklearn.metrics import *
 from sklearn.metrics.pairwise import *
-from sklearn.impute import *
-from sklearn.preprocessing import *
-from sklearn.linear_model import *
-from sklearn.compose import *
-from sklearn.utils.validation import *
-from sklearn.pipeline import *
-from sklearn.metrics import *
-from sklearn.tree import *
+from sklearn.mixture import *
 from sklearn.model_selection import *
-from sklearn.ensemble import *
-from sklearn.datasets import *
-from sklearn.dummy import *
-from sklearn.calibration import *
-from sklearn.svm import *
 from sklearn.multiclass import *
-from sklearn.neighbors import *
 from sklearn.multioutput import *
-from sklearn.decomposition import *
+from sklearn.naive_bayes import *
+from sklearn.neighbors import *
+from sklearn.neural_network import *
+from sklearn.pipeline import *
+from sklearn.preprocessing import *
+from sklearn.random_projection import *
+from sklearn.semi_supervised import *
+from sklearn.svm import *
+from sklearn.tree import *
+from sklearn.utils import *
+from sklearn.utils.validation import *
 
 np.random.seed = 110
 random.seed = 110
