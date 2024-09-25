@@ -66,6 +66,7 @@ from sklearn.kernel_approximation import *
 from sklearn.kernel_ridge import *
 from sklearn.linear_model import *
 from sklearn.manifold import *
+from sklearn.metrics import *
 from sklearn.metrics.cluster import *
 from sklearn.metrics.pairwise import *
 from sklearn.mixture import *
