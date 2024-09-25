@@ -38,7 +38,14 @@ imputer = ColumnTransformer(
 encoder = ColumnTransformer(
     transformers=[
         ('numerical', 'passthrough', type_features['numerical']),
-        ('ordinal', OneHotEncoder(
+        ('ordinal_ord', OrdinalEncoder(
+            categories=[
+                discrete[f]
+                for f in type_features['ordinal']
+            ],
+            handle_unknown='error',
+        ), type_features['ordinal']),
+        ('ordinal_oh', OneHotEncoder(
             categories=[
                 discrete[f]
                 for f in type_features['ordinal']
@@ -67,6 +74,7 @@ encoder = ColumnTransformer(
 standardizer = ColumnTransformer(
     transformers=[
         ('numerical', StandardScaler(), type_features['numerical']),
+        ('ordinal_ord', StandardScaler(), type_features['ordinal']),
     ],
     remainder='passthrough',
     verbose=False,
