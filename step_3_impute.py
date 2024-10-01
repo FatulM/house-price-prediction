@@ -7,6 +7,7 @@ os.environ['KERAS_BACKEND'] = 'tensorflow'
 import keras
 
 Path('data/impute/').mkdir(parents=True, exist_ok=True)
+Path('data/impute/model/').mkdir(parents=True, exist_ok=True)
 Path('data/impute/pred/').mkdir(parents=True, exist_ok=True)
 
 # Load Data:
@@ -126,7 +127,9 @@ train_X_impute[train_X_nas] = ae_train_X_pred[train_X_nas]
 test_X_impute: np.ndarray = test_X.copy()
 test_X_impute[test_X_nas] = ae_test_X_pred[test_X_nas]
 
-# Save Data:
+# Save Data, Metadata and Models:
+
+model.save('data/impute/model/model.keras')
 
 pd.DataFrame(
     columns=features,

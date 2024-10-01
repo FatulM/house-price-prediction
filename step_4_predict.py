@@ -7,6 +7,7 @@ os.environ['KERAS_BACKEND'] = 'tensorflow'
 import keras
 
 Path('data/predict/').mkdir(parents=True, exist_ok=True)
+Path('data/predict/model/').mkdir(parents=True, exist_ok=True)
 Path('data/predict/transform/').mkdir(parents=True, exist_ok=True)
 
 # Load Data:
@@ -79,7 +80,9 @@ target_transformer = joblib.load('data/preprocess/model/target_pipeline.pkl')
 train_y_pred_t = target_transformer.inverse_transform(train_y_pred.reshape(-1, 1))[:, 0]
 test_y_pred_t = target_transformer.inverse_transform(test_y_pred.reshape(-1, 1))[:, 0]
 
-# Save Data:
+# Save Data, Metadata and Models:
+
+model.save('data/predict/model/model.keras')
 
 pd.Series(
     data=train_y_pred,
