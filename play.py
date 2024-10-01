@@ -2,7 +2,7 @@
 
 from _imports import *
 
-sklearn.set_config(transform_output="pandas")
+sklearn.set_config(transform_output='pandas')
 
 # Load Data:
 
@@ -36,12 +36,12 @@ test_y_log10: np.ndarray = ytp * train_y_log10.std() + train_y_log10.mean()
 test_y: np.ndarray = np.power(10.0, test_y_log10)
 
 pd.Series(
-    index=pd.Index(range(1461, 2920), name="Id"),
+    index=pd.Index(range(1461, 2920), name='Id'),
     data=test_y,
-    name="SalePrice",
+    name='SalePrice',
 ).to_csv(
-    "output/submission.csv",
+    'output/submission.csv',
     index=True,
     header=True,
-    float_format="%f",
+    float_format='%f',
 )
