@@ -22,7 +22,7 @@ test_X: np.ndarray = pd.read_csv('data/preprocess/test_X.csv').to_numpy()
 train_X_nas: np.ndarray = pd.read_csv('data/preprocess/na/train_X.csv').eq(1).to_numpy()
 test_X_nas: np.ndarray = pd.read_csv('data/preprocess/na/test_X.csv').eq(1).to_numpy()
 
-# Make and Fit Model:
+# Make Model:
 
 keras.utils.set_random_seed(110)
 
@@ -94,6 +94,8 @@ model.compile(
     optimizer=keras.optimizers.Adam(),
 )
 
+# Fit Model:
+
 model.fit(
     train_X,
     [ae_train_X1, ae_train_X2, ae_train_X3, ae_train_X4],
@@ -104,24 +106,24 @@ model.fit(
 
 [ae_out1, ae_out2, ae_out3, ae_out4] = model.predict(train_X)
 
-ae_train_X_pred = np.hstack([ae_out1, ae_out2, ae_out3])
-ae_train_y_pred = ae_out4[:, 0]
+ae_train_X_pred: np.ndarray = np.hstack([ae_out1, ae_out2, ae_out3])
+ae_train_y_pred: np.ndarray = ae_out4[:, 0]
 
 # Predict for Test Data:
 
 [ae_out1, ae_out2, ae_out3, ae_out4] = model.predict(test_X)
 
-ae_test_X_pred = np.hstack([ae_out1, ae_out2, ae_out3])
-ae_test_y_pred = ae_out4[:, 0]
+ae_test_X_pred: np.ndarray = np.hstack([ae_out1, ae_out2, ae_out3])
+ae_test_y_pred: np.ndarray = ae_out4[:, 0]
 
 # Impute Train Data:
 
-train_X_impute = train_X.copy()
+train_X_impute: np.ndarray = train_X.copy()
 train_X_impute[train_X_nas] = ae_train_X_pred[train_X_nas]
 
 # Impute test Data:
 
-test_X_impute = test_X.copy()
+test_X_impute: np.ndarray = test_X.copy()
 test_X_impute[test_X_nas] = ae_test_X_pred[test_X_nas]
 
 # Save Data:

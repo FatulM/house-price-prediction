@@ -3,14 +3,14 @@ channels:
   - conda-forge
   - nodefaults
 dependencies:
-  - python
+  - python=3.12
+  - openjdk=21
   - pip
-  - openjdk
   - nodejs
   - julia
   - octave
-  - octave_kernel
   - r
+  - octave_kernel
   - r-essentials
   - r-base
   - r-irkernel
@@ -67,8 +67,6 @@ dependencies:
   - pytest-cov
   - coverage
   - numpy
-  - numpy-base
-  - numpydoc
   - pandas
   - pandas-datareader
   - scipy
@@ -182,10 +180,9 @@ dependencies:
   - tensorflow-cpu
   - tensorflow-metadata
   - transformers
-  - gymnasium[classic_control,atari,accept-rom-license]
+  - gymnasium
   - pytorch
   - torchvision
-  - torchaudio
   - flax
   - pyarrow-core
   - mypy
