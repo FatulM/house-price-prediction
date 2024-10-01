@@ -7,6 +7,7 @@ sklearn.set_config(transform_output='pandas')
 Path('data/preprocess/').mkdir(parents=True, exist_ok=True)
 Path('data/preprocess/meta/').mkdir(parents=True, exist_ok=True)
 Path('data/preprocess/model/').mkdir(parents=True, exist_ok=True)
+Path('data/preprocess/na/').mkdir(parents=True, exist_ok=True)
 
 # Load Meta Data:
 
@@ -97,8 +98,8 @@ preprocess = Pipeline([
 
 # Do Processing:
 
-train_X_prep = preprocess.fit_transform(train_X, train_y).astype(np.float64)
-test_X_prep = preprocess.transform(test_X).astype(np.float64)
+train_X_prep: pd.DataFrame = preprocess.fit_transform(train_X, train_y).astype(np.float64)
+test_X_prep: pd.DataFrame = preprocess.transform(test_X).astype(np.float64)
 
 # Preprocess Target:
 
@@ -116,7 +117,7 @@ target_pipeline = Pipeline([
     ('standardizer', StandardScaler()),
 ], verbose=False)
 
-train_y_prep = target_pipeline.fit_transform(train_y.reshape(-1, 1))[:, 0]
+train_y_prep: np.ndarray = target_pipeline.fit_transform(train_y.reshape(-1, 1))[:, 0]
 
 target_pipeline_meta = {
     'transformer_forward': 'numpy.log',
@@ -124,6 +125,32 @@ target_pipeline_meta = {
     'standardizer_loc': target_pipeline.named_steps['standardizer'].mean_[0],
     'standardizer_scale': target_pipeline.named_steps['standardizer'].scale_[0],
 }
+
+
+# Find NA Positions:
+
+def base_feature(f: str) -> str:
+    if "_" in f:
+        return f[:f.index("_")]
+    else:
+        return f
+
+
+train_X_nas: pd.DataFrame = pd.read_csv('data/fix/na/train_X.csv').eq(1)
+test_X_nas: pd.DataFrame = pd.read_csv('data/fix/na/test_X.csv').eq(1)
+
+features: list[str] = train_X.columns.tolist()
+features_prep: list[str] = train_X_prep.columns.tolist()
+
+train_X_prep_nas: pd.DataFrame = pd.DataFrame({
+    f: train_X_nas.loc[:, base_feature(f)]
+    for f in features_prep
+})
+
+test_X_prep_nas: pd.DataFrame = pd.DataFrame({
+    f: test_X_nas.loc[:, base_feature(f)]
+    for f in features_prep
+})
 
 # Save Data, Metadata and Models:
 
@@ -162,4 +189,14 @@ joblib.dump(
     filename='data/preprocess/model/target_pipeline.pkl',
     protocol=pickle.HIGHEST_PROTOCOL,
     compress=True,
+)
+
+train_X_prep_nas.astype(int).to_csv(
+    'data/preprocess/na/train_X.csv',
+    index=False,
+)
+
+test_X_prep_nas.astype(int).to_csv(
+    'data/preprocess/na/test_X.csv',
+    index=False,
 )

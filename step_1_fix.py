@@ -304,8 +304,8 @@ test_X_fixed: pd.DataFrame = fixer.transform(test_X)
 
 # Find NA Positions:
 
-train_x_nas: pd.DataFrame = train_X_fixed.isna()
-test_x_nas: pd.DataFrame = test_X_fixed.isna()
+train_X_nas: pd.DataFrame = train_X_fixed.isna()
+test_X_nas: pd.DataFrame = test_X_fixed.isna()
 
 # Save Data, Metadata and Models:
 
@@ -360,12 +360,12 @@ joblib.dump(
     compress=True,
 )
 
-train_x_nas.astype(int).to_csv(
+train_X_nas.astype(int).to_csv(
     'data/fix/na/train_X.csv',
     index=False,
 )
 
-test_x_nas.astype(int).to_csv(
+test_X_nas.astype(int).to_csv(
     'data/fix/na/test_X.csv',
     index=False,
 )
