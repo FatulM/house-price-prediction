@@ -173,7 +173,7 @@ pd.Series(
 )
 
 pd.Series(target_pipeline_meta).to_csv(
-    'data/preprocess/meta/target.csv',
+    'data/preprocess/meta/target_pipeline.csv',
     header=False,
 )
 
