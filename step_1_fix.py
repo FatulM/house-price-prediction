@@ -7,6 +7,7 @@ sklearn.set_config(transform_output='pandas')
 Path('data/fix/').mkdir(parents=True, exist_ok=True)
 Path('data/fix/meta/').mkdir(parents=True, exist_ok=True)
 Path('data/fix/model/').mkdir(parents=True, exist_ok=True)
+Path('data/fix/na/').mkdir(parents=True, exist_ok=True)
 
 # Load Data:
 
@@ -301,6 +302,11 @@ fixer = Pipeline([
 train_X_fixed: pd.DataFrame = fixer.fit_transform(train_X)
 test_X_fixed: pd.DataFrame = fixer.transform(test_X)
 
+# Find NA Positions:
+
+train_x_nas: pd.DataFrame = train_X_fixed.isna()
+test_x_nas: pd.DataFrame = test_X_fixed.isna()
+
 # Save Data, Metadata and Models:
 
 train_X_fixed.to_csv(
@@ -352,4 +358,14 @@ joblib.dump(
     filename='data/fix/model/pipeline.pkl',
     protocol=pickle.HIGHEST_PROTOCOL,
     compress=True,
+)
+
+train_x_nas.astype(int).to_csv(
+    'data/fix/na/train_X.csv',
+    index=False,
+)
+
+test_x_nas.astype(int).to_csv(
+    'data/fix/na/test_X.csv',
+    index=False,
 )
