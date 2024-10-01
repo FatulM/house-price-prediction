@@ -1,0 +1,4 @@
+transformer_forward,numpy.log
+transformer_backward,numpy.exp
+standardizer_loc,12.024050901109383
+standardizer_scale,0.39931504624370256

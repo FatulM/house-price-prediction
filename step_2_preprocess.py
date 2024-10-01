@@ -2,25 +2,30 @@
 
 from _imports import *
 
-sklearn.set_config(transform_output="pandas")
+sklearn.set_config(transform_output='pandas')
+
+Path('data/meta/').mkdir(parents=True, exist_ok=True)
+Path('data/fix/').mkdir(parents=True, exist_ok=True)
+Path('data/preprocess/').mkdir(parents=True, exist_ok=True)
+Path('data/preprocess/model/').mkdir(parents=True, exist_ok=True)
 
 # Load Meta Data:
 
 types: dict[str, str] = pd.read_csv('data/meta/types.csv', index_col=0).iloc[:, 0].to_dict()
 discrete: dict[str, list[str]] = pd.read_csv('data/meta/discrete.csv', index_col=0).iloc[:, 0] \
-    .map(lambda x: x.split(sep="|")).to_dict()
+    .map(lambda x: x.split(sep='|')).to_dict()
 
 type_features = {
-    "numerical": [f for f, t in types.items() if t == "numerical"],
-    "ordinal": [f for f, t in types.items() if t == "ordinal"],
-    "nominal": [f for f, t in types.items() if t == "nominal"],
+    'numerical': [f for f, t in types.items() if t == 'numerical'],
+    'ordinal': [f for f, t in types.items() if t == 'ordinal'],
+    'nominal': [f for f, t in types.items() if t == 'nominal'],
 }
 
 # Load Data:
 
-train_X: pd.DataFrame = pd.read_csv('data/train_X.csv')
-train_y: np.ndarray = pd.read_csv('data/train_y.csv').iloc[:, 0].to_numpy()
-test_X: pd.DataFrame = pd.read_csv('data/test_X.csv')
+train_X: pd.DataFrame = pd.read_csv('data/fix/train_X.csv')
+train_y: np.ndarray = pd.read_csv('data/fix/train_y.csv').iloc[:, 0].to_numpy()
+test_X: pd.DataFrame = pd.read_csv('data/fix/test_X.csv')
 
 # Impute:
 
@@ -96,7 +101,46 @@ preprocess = Pipeline([
 train_X_prep = preprocess.fit_transform(train_X, train_y).astype(np.float64)
 test_X_prep = preprocess.transform(test_X).astype(np.float64)
 
-# Save Results:
+# Preprocess Target:
 
-train_X_prep.to_csv('data/train_X_prep.csv', index=False)
-test_X_prep.to_csv('data/test_X_prep.csv', index=False)
+sklearn.set_config(transform_output='default')
+
+target_pipeline = Pipeline([
+    ('transformer', FunctionTransformer(
+        func=np.log,
+        inverse_func=np.exp,
+        validate=True,
+        accept_sparse=False,
+        check_inverse=True,
+        feature_names_out='one-to-one',
+    )),
+    ('standardizer', StandardScaler()),
+], verbose=False)
+
+train_y_prep = target_pipeline.fit_transform(train_y.reshape(-1, 1))[:, 0]
+
+target_pipeline_meta = {
+    'transformer_forward': 'numpy.log',
+    'transformer_backward': 'numpy.exp',
+    'standardizer_loc': target_pipeline.named_steps['standardizer'].mean_[0],
+    'standardizer_scale': target_pipeline.named_steps['standardizer'].scale_[0],
+}
+
+# Save Data, Metadata and Models:
+
+train_X_prep.to_csv('data/preprocess/train_X.csv', index=False)
+
+test_X_prep.to_csv('data/preprocess/test_X.csv', index=False)
+
+pd.Series(
+    data=train_y_prep,
+    name='SalePrice',
+).to_csv('data/preprocess/train_y.csv', index=False)
+
+joblib.dump(preprocess, filename='data/preprocess/model/pipeline.pkl',
+            protocol=pickle.HIGHEST_PROTOCOL, compress=True)
+
+joblib.dump(target_pipeline, filename='data/preprocess/model/target_pipeline.pkl',
+            protocol=pickle.HIGHEST_PROTOCOL, compress=True)
+
+pd.Series(target_pipeline_meta).to_csv('data/preprocess/model/target_pipeline.csv', header=False)
