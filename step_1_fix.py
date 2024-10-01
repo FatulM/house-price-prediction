@@ -2,10 +2,10 @@
 
 from _imports import *
 
-sklearn.set_config(transform_output="pandas")
+sklearn.set_config(transform_output='pandas')
 
-Path("data/meta/").mkdir(parents=True, exist_ok=True)
-Path("data/fix/").mkdir(parents=True, exist_ok=True)
+Path('data/meta/').mkdir(parents=True, exist_ok=True)
+Path('data/fix/').mkdir(parents=True, exist_ok=True)
 
 # Load Data:
 
@@ -300,7 +300,7 @@ fixer = Pipeline([
 train_X_fixed: pd.DataFrame = fixer.fit_transform(train_X)
 test_X_fixed: pd.DataFrame = fixer.transform(test_X)
 
-# Save Data:
+# Save Data, Metadata and Models:
 
 train_X_fixed.to_csv(
     'data/fix/train_X.csv',
@@ -324,8 +324,6 @@ pd.Series(
     index=False,
     float_format='%g',
 )
-
-# Save Some Meta Data:
 
 pd.Series(
     index=pd.Index(discrete.keys(), name='feature'),

@@ -121,29 +121,31 @@ from sklearn.utils.sparsefuncs_fast import *
 from sklearn.utils.stats import *
 from sklearn.utils.validation import *
 
+import joblib
+
 # Configs:
 
-sns.set_theme(style="ticks", rc={"figure.figsize": (5, 5)})
-so.Plot.config.theme.update(sns.axes_style(style="ticks", rc={"figure.figsize": (5, 5)}))
+sns.set_theme(style='ticks', rc={'figure.figsize': (5, 5)})
+so.Plot.config.theme.update(sns.axes_style(style='ticks', rc={'figure.figsize': (5, 5)}))
 
-# pio.templates.default = "plotly_dark"
-# plt.style.use("dark_background")
+# pio.templates.default = 'plotly_dark'
+# plt.style.use('dark_background')
 
-plt.rcParams["figure.figsize"] = (5, 5)
+plt.rcParams['figure.figsize'] = (5, 5)
 
 SMALL_SIZE = 8
 MEDIUM_SIZE = 10
 BIGGER_SIZE = 12
 
-plt.rc("font", size=SMALL_SIZE)
-plt.rc("axes", titlesize=SMALL_SIZE)
-plt.rc("axes", labelsize=MEDIUM_SIZE)
-plt.rc("xtick", labelsize=SMALL_SIZE)
-plt.rc("ytick", labelsize=SMALL_SIZE)
-plt.rc("legend", fontsize=SMALL_SIZE)
-plt.rc("figure", titlesize=BIGGER_SIZE)
+plt.rc('font', size=SMALL_SIZE)
+plt.rc('axes', titlesize=SMALL_SIZE)
+plt.rc('axes', labelsize=MEDIUM_SIZE)
+plt.rc('xtick', labelsize=SMALL_SIZE)
+plt.rc('ytick', labelsize=SMALL_SIZE)
+plt.rc('legend', fontsize=SMALL_SIZE)
+plt.rc('figure', titlesize=BIGGER_SIZE)
 
-Path("input/").mkdir(parents=True, exist_ok=True)
-Path("input/docs/").mkdir(parents=True, exist_ok=True)
-Path("data/").mkdir(parents=True, exist_ok=True)
-Path("output/").mkdir(parents=True, exist_ok=True)
+Path('input/').mkdir(parents=True, exist_ok=True)
+Path('input/docs/').mkdir(parents=True, exist_ok=True)
+Path('data/').mkdir(parents=True, exist_ok=True)
+Path('output/').mkdir(parents=True, exist_ok=True)
