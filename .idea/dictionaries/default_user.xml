@@ -775,8 +775,10 @@
       <w>ir1</w>
       <w>ir2</w>
       <w>ir3</w>
+      <w>irkernel</w>
       <w>irregular</w>
       <w>is</w>
+      <w>islr</w>
       <w>just</w>
       <w>kitchen</w>
       <w>kitchens</w>
@@ -788,6 +790,8 @@
       <w>level</w>
       <w>levels</w>
       <w>li</w>
+      <w>libsqlite</w>
+      <w>libxgboost</w>
       <w>limits</w>
       <w>linear</w>
       <w>linked</w>
@@ -836,6 +840,7 @@
       <w>month</w>
       <w>more</w>
       <w>mostly</w>
+      <w>mpld</w>
       <w>ms</w>
       <w>multi</w>
       <w>multilevel</w>
@@ -849,6 +854,7 @@
       <w>newer</w>
       <w>nn</w>
       <w>no</w>
+      <w>nodefaults</w>
       <w>none</w>
       <w>norm</w>
       <w>normal</w>
@@ -936,6 +942,7 @@
       <w>rm</w>
       <w>rms</w>
       <w>road</w>
+      <w>rocr</w>
       <w>roll</w>
       <w>romex</w>
       <w>roof</w>
@@ -1018,6 +1025,8 @@
       <w>ten</w>
       <w>tennis</w>
       <w>terms</w>
+      <w>tfdatasets</w>
+      <w>tfestimators</w>
       <w>than</w>
       <w>the</w>
       <w>three</w>
@@ -1086,6 +1095,8 @@
       <w>yr</w>
       <w>ytick</w>
       <w>yyyy</w>
+      <w>zeallot</w>
+      <w>zlib</w>
       <w>zoning</w>
     </words>
   </dictionary>
