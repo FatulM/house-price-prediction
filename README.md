@@ -39,4 +39,4 @@ There are some ipython notebooks which I used to explore different topics in the
 If you want to get exact same results as me please use conda environment in `environment.yml` file.
 
 This work is to continue my previous work on this dataset which is stored in Kaggle at
-[Kaggle House Price Prediction (Previous Work)](https://www.kaggle.com/code/fatulm/house-price-prediction).
+[Previous Work at Kaggle about House Price Prediction](https://www.kaggle.com/code/fatulm/house-price-prediction).
