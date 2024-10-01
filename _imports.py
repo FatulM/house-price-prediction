@@ -1,3 +1,5 @@
+# Imports:
+
 import os
 import sys
 import re
@@ -8,24 +10,38 @@ import warnings
 from pprint import pprint
 from collections import *
 from typing import Any
-
-import plotly
-import plotly.express as px
-import plotly.io as pio
-import plotly.graph_objects as go
-import plotly.figure_factory as ff
-
-import pandas as pd
+from pathlib import Path
 
 import numpy as np
 import numpy.typing as npt
+import numpy.lib
+import numpy.random
+import numpy.linalg
+import numpy.fft
+import numpy.polynomial
 
+import pandas as pd
 from pandas.plotting import *
 
 import scipy
-import scipy.stats
+import scipy.cluster
+import scipy.constants
+import scipy.datasets
+import scipy.fft
+import scipy.fftpack
+import scipy.integrate
+import scipy.interpolate
+import scipy.io
+import scipy.linalg
+import scipy.misc
 import scipy.ndimage
+import scipy.odr
+import scipy.optimize
+import scipy.signal
 import scipy.sparse
+import scipy.spatial
+import scipy.special
+import scipy.stats
 
 import matplotlib.pyplot as plt
 import matplotlib as mpl
@@ -33,7 +49,11 @@ import matplotlib as mpl
 import seaborn as sns
 import seaborn.objects as so
 
-import joblib
+import plotly
+import plotly.express as px
+import plotly.io as pio
+import plotly.graph_objects as go
+import plotly.figure_factory as ff
 
 import sklearn
 from sklearn.base import *
@@ -101,19 +121,13 @@ from sklearn.utils.sparsefuncs_fast import *
 from sklearn.utils.stats import *
 from sklearn.utils.validation import *
 
-np.random.seed = 110
-random.seed = 110
-
-sklearn.set_config(transform_output="pandas")
+# Configs:
 
 sns.set_theme(style="ticks", rc={"figure.figsize": (5, 5)})
 so.Plot.config.theme.update(sns.axes_style(style="ticks", rc={"figure.figsize": (5, 5)}))
 
-pio.templates.default = "seaborn"
 # pio.templates.default = "plotly_dark"
 # plt.style.use("dark_background")
-
-pd.options.plotting.backend = "matplotlib"
 
 plt.rcParams["figure.figsize"] = (5, 5)
 
@@ -128,3 +142,8 @@ plt.rc("xtick", labelsize=SMALL_SIZE)
 plt.rc("ytick", labelsize=SMALL_SIZE)
 plt.rc("legend", fontsize=SMALL_SIZE)
 plt.rc("figure", titlesize=BIGGER_SIZE)
+
+Path("input/").mkdir(parents=True, exist_ok=True)
+Path("input/docs/").mkdir(parents=True, exist_ok=True)
+Path("data/").mkdir(parents=True, exist_ok=True)
+Path("output/").mkdir(parents=True, exist_ok=True)
