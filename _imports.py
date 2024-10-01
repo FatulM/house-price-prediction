@@ -146,6 +146,5 @@ plt.rc('legend', fontsize=SMALL_SIZE)
 plt.rc('figure', titlesize=BIGGER_SIZE)
 
 Path('input/').mkdir(parents=True, exist_ok=True)
-Path('input/docs/').mkdir(parents=True, exist_ok=True)
 Path('data/').mkdir(parents=True, exist_ok=True)
 Path('output/').mkdir(parents=True, exist_ok=True)

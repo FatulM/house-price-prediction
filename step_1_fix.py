@@ -4,8 +4,9 @@ from _imports import *
 
 sklearn.set_config(transform_output='pandas')
 
-Path('data/meta/').mkdir(parents=True, exist_ok=True)
 Path('data/fix/').mkdir(parents=True, exist_ok=True)
+Path('data/fix/meta/').mkdir(parents=True, exist_ok=True)
+Path('data/fix/model/').mkdir(parents=True, exist_ok=True)
 
 # Load Data:
 
@@ -333,7 +334,7 @@ pd.Series(
     ],
     name='values',
 ).to_csv(
-    'data/meta/discrete.csv',
+    'data/fix/meta/discrete.csv',
     index=True,
 )
 
@@ -342,6 +343,13 @@ pd.Series(
     data=feature_types.values(),
     name='type',
 ).to_csv(
-    'data/meta/types.csv',
+    'data/fix/meta/types.csv',
     index=True,
+)
+
+joblib.dump(
+    fixer,
+    filename='data/fix/model/pipeline.pkl',
+    protocol=pickle.HIGHEST_PROTOCOL,
+    compress=True,
 )

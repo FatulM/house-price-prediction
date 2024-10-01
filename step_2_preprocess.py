@@ -4,15 +4,14 @@ from _imports import *
 
 sklearn.set_config(transform_output='pandas')
 
-Path('data/meta/').mkdir(parents=True, exist_ok=True)
-Path('data/fix/').mkdir(parents=True, exist_ok=True)
 Path('data/preprocess/').mkdir(parents=True, exist_ok=True)
+Path('data/preprocess/meta/').mkdir(parents=True, exist_ok=True)
 Path('data/preprocess/model/').mkdir(parents=True, exist_ok=True)
 
 # Load Meta Data:
 
-types: dict[str, str] = pd.read_csv('data/meta/types.csv', index_col=0).iloc[:, 0].to_dict()
-discrete: dict[str, list[str]] = pd.read_csv('data/meta/discrete.csv', index_col=0).iloc[:, 0] \
+types: dict[str, str] = pd.read_csv('data/fix/meta/types.csv', index_col=0).iloc[:, 0].to_dict()
+discrete: dict[str, list[str]] = pd.read_csv('data/fix/meta/discrete.csv', index_col=0).iloc[:, 0] \
     .map(lambda x: x.split(sep='|')).to_dict()
 
 type_features = {
@@ -128,19 +127,39 @@ target_pipeline_meta = {
 
 # Save Data, Metadata and Models:
 
-train_X_prep.to_csv('data/preprocess/train_X.csv', index=False)
+train_X_prep.to_csv(
+    'data/preprocess/train_X.csv',
+    index=False,
+)
 
-test_X_prep.to_csv('data/preprocess/test_X.csv', index=False)
+test_X_prep.to_csv(
+    'data/preprocess/test_X.csv',
+    index=False,
+)
 
 pd.Series(
     data=train_y_prep,
     name='SalePrice',
-).to_csv('data/preprocess/train_y.csv', index=False)
+).to_csv(
+    'data/preprocess/train_y.csv',
+    index=False,
+)
 
-joblib.dump(preprocess, filename='data/preprocess/model/pipeline.pkl',
-            protocol=pickle.HIGHEST_PROTOCOL, compress=True)
+pd.Series(target_pipeline_meta).to_csv(
+    'data/preprocess/meta/target.csv',
+    header=False,
+)
 
-joblib.dump(target_pipeline, filename='data/preprocess/model/target_pipeline.pkl',
-            protocol=pickle.HIGHEST_PROTOCOL, compress=True)
+joblib.dump(
+    preprocess,
+    filename='data/preprocess/model/pipeline.pkl',
+    protocol=pickle.HIGHEST_PROTOCOL,
+    compress=True,
+)
 
-pd.Series(target_pipeline_meta).to_csv('data/preprocess/model/target_pipeline.csv', header=False)
+joblib.dump(
+    target_pipeline,
+    filename='data/preprocess/model/target_pipeline.pkl',
+    protocol=pickle.HIGHEST_PROTOCOL,
+    compress=True,
+)
