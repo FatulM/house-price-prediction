@@ -4,6 +4,10 @@ from _imports import *
 
 sklearn.set_config(transform_output='pandas')
 
+Path('input/').mkdir(parents=True, exist_ok=True)
+Path('data/').mkdir(parents=True, exist_ok=True)
+Path('output/').mkdir(parents=True, exist_ok=True)
+
 Path('data/fix/').mkdir(parents=True, exist_ok=True)
 Path('data/fix/meta/').mkdir(parents=True, exist_ok=True)
 Path('data/fix/model/').mkdir(parents=True, exist_ok=True)
