@@ -10,9 +10,13 @@ Path('data/predict/transform/').mkdir(parents=True, exist_ok=True)
 
 # Load Data:
 
-train_X: np.ndarray = pd.read_csv('data/impute/train_X.csv').to_numpy()
+train_X: np.ndarray = pd.read_csv('data/preprocess/train_X.csv').to_numpy()
+test_X: np.ndarray = pd.read_csv('data/preprocess/test_X.csv').to_numpy()
+
+train_X_fixed: np.ndarray = pd.read_csv('data/impute/train_X.csv').to_numpy()
+test_X_fixed: np.ndarray = pd.read_csv('data/impute/test_X.csv').to_numpy()
+
 train_y: np.ndarray = pd.read_csv('data/preprocess/train_y.csv').iloc[:, 0].to_numpy()
-test_X: np.ndarray = pd.read_csv('data/impute/test_X.csv').to_numpy()
 
 # Make Model:
 
@@ -61,15 +65,15 @@ model.compile(
 # Fit Model:
 
 model.fit(
-    train_X,
+    train_X, # TODO: HOW ? Why not use fixed ?
     train_y,
     epochs=250,
 )
 
 # Predict:
 
-train_y_pred = model.predict(train_X)[:, 0]
-test_y_pred = model.predict(test_X)[:, 0]
+train_y_pred = model.predict(train_X_fixed)[:, 0]
+test_y_pred = model.predict(test_X_fixed)[:, 0]
 
 # Transform target:
 
