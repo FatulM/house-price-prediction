@@ -2,6 +2,8 @@
 
 from _imports import *
 
+sklearn.set_config(transform_output="pandas")
+
 # Load Data:
 
 train_X: np.ndarray = pd.read_csv('data/train_X_prep.csv').to_numpy()

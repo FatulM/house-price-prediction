@@ -2,6 +2,8 @@
 
 from _imports import *
 
+sklearn.set_config(transform_output="pandas")
+
 # Load Meta Data:
 
 types: dict[str, str] = pd.read_csv('data/meta/types.csv', index_col=0).iloc[:, 0].to_dict()

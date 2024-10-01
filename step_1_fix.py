@@ -2,6 +2,11 @@
 
 from _imports import *
 
+sklearn.set_config(transform_output="pandas")
+
+Path("data/meta/").mkdir(parents=True, exist_ok=True)
+Path("data/fix/").mkdir(parents=True, exist_ok=True)
+
 # Load Data:
 
 train_df: pd.DataFrame = pd.read_csv(
@@ -298,14 +303,14 @@ test_X_fixed: pd.DataFrame = fixer.transform(test_X)
 # Save Data:
 
 train_X_fixed.to_csv(
-    'data/train_X.csv',
+    'data/fix/train_X.csv',
     na_rep='',
     index=False,
     float_format='%g',
 )
 
 test_X_fixed.to_csv(
-    'data/test_X.csv',
+    'data/fix/test_X.csv',
     na_rep='',
     index=False,
     float_format='%g',
@@ -315,7 +320,7 @@ pd.Series(
     train_y,
     name='SalePrice',
 ).to_csv(
-    'data/train_y.csv',
+    'data/fix/train_y.csv',
     index=False,
     float_format='%g',
 )
