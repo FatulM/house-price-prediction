@@ -1,4 +1,4 @@
-name: boost
+name: house_price_prediction_env
 channels:
   - conda-forge
   - nodefaults
