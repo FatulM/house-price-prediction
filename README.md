@@ -1,7 +1,9 @@
 # House Prices
 
 Please check out
-[House Price Prediction Kaggle Competition](https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/overview).
+[House Price Prediction Competition at Kaggle](https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/overview).
+
+We are trying to predict house prices on a test set by using provided labeled data.
 
 This GitHub project's results will be upstreamed to `Kaggle` at
 [Kaggle Upstream Notebook for this Respositoy](https://www.kaggle.com/code/fatulm/github-house-price-prediction-upstream).
