@@ -6,7 +6,7 @@ Please check out
 We are trying to predict house prices on a test set by using provided labeled data.
 
 This GitHub project's results will be upstreamed to `Kaggle` at
-[Kaggle Upstream Notebook for this Respositoy](https://www.kaggle.com/code/fatulm/github-house-price-prediction-upstream).
+[Kaggle Upstream Notebook for this Repository](https://www.kaggle.com/code/fatulm/github-house-price-prediction-upstream).
 
 Here I will fix and preprocess data.
 Then by using a deep neural network I will try to impute missing values.
@@ -20,7 +20,7 @@ I will use several python packages such as:
 - scikit-learn
 - joblib
 - keras (with jax backend)
-- matplotlib, seaborn and plotly for visualization
+- matplotlib, seaborn and plotly (for visualization)
 
 The main codes are in top directory, and should be run sequentially:
 
@@ -36,9 +36,28 @@ The outputs are saved to `output` folder.
 
 The middle data between input and output (as well as persisted models) are saved to `data` folder.
 
+If you want to get exact same results as me please use conda environment in `environment.yml` file.
+
 There are some ipython notebooks which I used to explore different topics in the `notebooks` folder.
 
-If you want to get exact same results as me please use conda environment in `environment.yml` file.
+- notebooks/impute-pca.ipynb: Trying to impute NAs by repeatedly using PCA with a low number of components.
+- notebooks/keras-autoencoder-pca.ipynb:  Using Keras to build an autoregression model to impute NAs and then using an
+  MLP to make prediction.
+- notebooks/keras-impute-autor-mlp.ipynb: Using Keras to build an autoencoder in 2 dimensions to visualize data and then
+  applying PCA to it.
+- notebooks/keras-mlp.ipynb: Using Keras to build an MLP to make prediction.
+- notebooks/mlp.ipynb: Using scikit-learn MLP to make prediction.
+- notebooks/pca-lda-old.ipynb: Multiple different lower dimension embedding techniques such as PCA and LDA to visualize
+  data in 2 and 3 dimensions. This is done when I didn't add ordinal features as ordinarily encoded when preprocessing
+  data.
+- notebooks/pca-lda.ipynb: Multiple different lower dimension embedding techniques such as PCA and LDA to visualize data
+  in 2 and 3 dimensions.
+- notebooks/rf-explore.ipynb: Explore different RF and Tree Ensembles on dataset.
+- notebooks/rf-lin-cross-val.ipynb: Cross validate different models such as RF and a Regularized Linear model in
+  randomized manner.
+- notebooks/rf-pred.ipynb: Using RF to make prediction.
 
 This work is to continue my previous work on this dataset which is stored in Kaggle at
 [Previous Work at Kaggle about House Price Prediction](https://www.kaggle.com/code/fatulm/house-price-prediction).
+Which itself is forked from my friend's notebook on kaggle
+[Another Notebook on Kaggle](https://www.kaggle.com/code/mahyarpoorjafary/house-price-prediction).
