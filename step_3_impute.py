@@ -2,8 +2,6 @@
 
 from _imports import *
 
-os.environ['KERAS_BACKEND'] = 'tensorflow'
-
 import keras
 
 Path('data/impute/').mkdir(parents=True, exist_ok=True)

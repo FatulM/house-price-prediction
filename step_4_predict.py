@@ -2,8 +2,6 @@
 
 from _imports import *
 
-os.environ['KERAS_BACKEND'] = 'tensorflow'
-
 import keras
 
 Path('data/predict/').mkdir(parents=True, exist_ok=True)
@@ -49,7 +47,7 @@ model = keras.Sequential([
     ),
     keras.layers.Dropout(0.05, seed=103, name='dropout3'),
     keras.layers.Dense(1, activation='linear', name='output')
-])
+], name="model")
 
 model.compile(
     loss=keras.losses.MeanSquaredError(name='MSE'),
