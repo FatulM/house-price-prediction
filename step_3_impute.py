@@ -135,6 +135,7 @@ pd.DataFrame(
 ).to_csv(
     'data/impute/train_X.csv',
     index=False,
+    float_format="%.15f",
 )
 
 pd.DataFrame(
@@ -143,6 +144,7 @@ pd.DataFrame(
 ).to_csv(
     'data/impute/test_X.csv',
     index=False,
+    float_format="%.15f",
 )
 
 pd.DataFrame(
@@ -151,6 +153,7 @@ pd.DataFrame(
 ).to_csv(
     'data/impute/pred/train_X.csv',
     index=False,
+    float_format="%.15f",
 )
 
 pd.Series(
@@ -159,6 +162,7 @@ pd.Series(
 ).to_csv(
     'data/impute/pred/train_y.csv',
     index=False,
+    float_format="%.15f",
 )
 
 pd.DataFrame(
@@ -167,6 +171,7 @@ pd.DataFrame(
 ).to_csv(
     'data/impute/pred/test_X.csv',
     index=False,
+    float_format="%.15f",
 )
 
 pd.Series(
@@ -175,4 +180,5 @@ pd.Series(
 ).to_csv(
     'data/impute/pred/test_y.csv',
     index=False,
+    float_format="%.15f",
 )

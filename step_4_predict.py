@@ -88,6 +88,7 @@ pd.Series(
 ).to_csv(
     'data/predict/train_y.csv',
     index=False,
+    float_format="%.15f",
 )
 
 pd.Series(
@@ -96,6 +97,7 @@ pd.Series(
 ).to_csv(
     'data/predict/test_y.csv',
     index=False,
+    float_format="%.15f",
 )
 
 pd.Series(
@@ -104,6 +106,7 @@ pd.Series(
 ).to_csv(
     'data/predict/transform/train_y.csv',
     index=False,
+    float_format="%.15f",
 )
 
 pd.Series(
@@ -112,6 +115,7 @@ pd.Series(
 ).to_csv(
     'data/predict/transform/test_y.csv',
     index=False,
+    float_format="%.15f",
 )
 
 pd.Series(
@@ -123,4 +127,5 @@ pd.Series(
     name='SalePrice',
 ).to_csv(
     'output/submission.csv',
+    float_format="%.15f",
 )

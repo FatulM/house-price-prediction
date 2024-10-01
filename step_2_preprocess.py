@@ -157,11 +157,13 @@ test_X_prep_nas: pd.DataFrame = pd.DataFrame({
 train_X_prep.to_csv(
     'data/preprocess/train_X.csv',
     index=False,
+    float_format="%.15f",
 )
 
 test_X_prep.to_csv(
     'data/preprocess/test_X.csv',
     index=False,
+    float_format="%.15f",
 )
 
 pd.Series(
@@ -170,6 +172,7 @@ pd.Series(
 ).to_csv(
     'data/preprocess/train_y.csv',
     index=False,
+    float_format="%.15f",
 )
 
 pd.Series(target_pipeline_meta).to_csv(
