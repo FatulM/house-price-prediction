@@ -19,45 +19,48 @@ test_X_nas: np.ndarray = pd.read_csv('data/preprocess/na/test_X.csv').eq(1).to_n
 
 train_y: np.ndarray = pd.read_csv('data/preprocess/train_y.csv').iloc[:, 0].to_numpy()
 
+
 # Do PCA Imputation:
 
+# noinspection PyPep8Naming
 def pca_impute(
-    X: np.ndarray, Xna: np.ndarray,
-    Xt: np.ndarray, Xtna: np.ndarray,
-    ncomp: int,
-    niter:int,
+        X: np.ndarray, Xna: np.ndarray,
+        Xt: np.ndarray, Xtna: np.ndarray,
+        ncomp: int,
+        niter: int,
 ) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
-  costs = np.zeros((niter, 4))
-  Xf = X.copy()
-  Xtf = Xt.copy()
-  for i in range(niter):
-    pca = PCA(n_components=ncomp, random_state=i)
+    costs = np.zeros((niter, 4))
+    Xf = X.copy()
+    Xtf = Xt.copy()
+    for i in range(niter):
+        pca = PCA(n_components=ncomp, random_state=i)
 
-    pca.fit(Xf)
-    
-    Z = pca.inverse_transform(pca.transform(Xf))
-    Zt = pca.inverse_transform(pca.transform(Xtf))
+        pca.fit(Xf)
 
-    nXf = Xf.copy()
-    nXf[Xna] = Z[Xna]
-    nXtf = Xtf.copy()
-    nXtf[Xtna] = Zt[Xtna]
+        Z = pca.inverse_transform(pca.transform(Xf))
+        Zt = pca.inverse_transform(pca.transform(Xtf))
 
-    diff0 = math.sqrt(((nXf[Xna] - X[Xna])**2).mean())
-    diff = math.sqrt(((nXf[Xna] - Xf[Xna])**2).mean())
-    difft0 = math.sqrt(((nXtf[Xtna] - Xt[Xtna])**2).mean())
-    difft = math.sqrt(((nXtf[Xtna] - Xtf[Xtna])**2).mean())
-    
-    costs[i,0] = diff0
-    costs[i,1] = diff
-    costs[i,2] = difft0
-    costs[i,3] = difft
-    
-    Xf = nXf
-    Xtf = nXtf
-  return Xf, Xtf, costs
+        nXf = Xf.copy()
+        nXf[Xna] = Z[Xna]
+        nXtf = Xtf.copy()
+        nXtf[Xtna] = Zt[Xtna]
 
-train_X_fixed, test_X_fixed, costs = pca_impute(
+        diff0 = math.sqrt(((nXf[Xna] - X[Xna]) ** 2).mean())
+        diff = math.sqrt(((nXf[Xna] - Xf[Xna]) ** 2).mean())
+        difft0 = math.sqrt(((nXtf[Xtna] - Xt[Xtna]) ** 2).mean())
+        difft = math.sqrt(((nXtf[Xtna] - Xtf[Xtna]) ** 2).mean())
+
+        costs[i, 0] = diff0
+        costs[i, 1] = diff
+        costs[i, 2] = difft0
+        costs[i, 3] = difft
+
+        Xf = nXf
+        Xtf = nXtf
+    return Xf, Xtf, costs
+
+
+train_X_fixed, test_X_fixed, _ = pca_impute(
     train_X, train_X_nas,
     test_X, test_X_nas,
     2,
