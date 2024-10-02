@@ -1,4 +1,4 @@
-# House Prices
+# House Price Prediction
 
 Please check out
 [House Price Prediction Competition at Kaggle](https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/overview).
