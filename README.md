@@ -29,6 +29,7 @@ The main codes are in top directory, and should be run sequentially:
 - step_2_preprocess.py: basic preprocessing such as basic imputation, one-hot encoding and standardizing features.
 - step_3_impute.py: impute NAs using a deep neural network.
 - step_4_predict.py: predict test results using a deep neural network.
+- step_5_pca.py: impute NAs using pca and then making prediction using last step's keras model.
 
 The inputs are downloaded from `Kaggle` and saved to `input` folder.
 
