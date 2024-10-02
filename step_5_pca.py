@@ -89,6 +89,8 @@ pd.DataFrame(
 
 # Predict:
 
+keras.utils.set_random_seed(100)
+
 model = keras.saving.load_model("data/predict/model/model.keras")
 
 train_y_pred = model.predict(train_X_fixed)[:, 0]
