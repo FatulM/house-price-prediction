@@ -65,7 +65,7 @@ model.compile(
 # Fit Model:
 
 model.fit(
-    train_X, # TODO: HOW ? Why not use fixed ?
+    train_X,  # TODO: HOW ? Why not use fixed ?
     train_y,
     epochs=250,
 )
