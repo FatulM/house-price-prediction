@@ -8,6 +8,8 @@ Path('data/impute/').mkdir(parents=True, exist_ok=True)
 Path('data/impute/model/').mkdir(parents=True, exist_ok=True)
 Path('data/impute/pred/').mkdir(parents=True, exist_ok=True)
 
+keras.utils.set_random_seed(110)
+
 # Load Data:
 
 types: pd.Series = pd.read_csv('data/fix/meta/types.csv', index_col=0).iloc[:, 0]
@@ -21,9 +23,7 @@ test_X: np.ndarray = pd.read_csv('data/preprocess/test_X.csv').to_numpy()
 train_X_nas: np.ndarray = pd.read_csv('data/preprocess/na/train_X.csv').eq(1).to_numpy()
 test_X_nas: np.ndarray = pd.read_csv('data/preprocess/na/test_X.csv').eq(1).to_numpy()
 
-# Make Model:
-
-keras.utils.set_random_seed(110)
+# Make and Fit Model:
 
 n_features: int = train_X.shape[1]
 ae_features_1: int = int(np.sum((types == 'numerical')))
@@ -38,44 +38,28 @@ ae_train_X4: np.ndarray = train_y.reshape(-1, 1)
 
 input1 = keras.layers.Input(shape=(n_features,), name='input')
 hidden1 = keras.layers.Dense(
-    250, activation='relu',
+    500, activation='relu',
     kernel_regularizer=keras.regularizers.L1L2(l1=1e-5, l2=1e-4),
     bias_regularizer=keras.regularizers.L2(1e-4),
     activity_regularizer=keras.regularizers.L2(1e-5),
     name='hidden1',
 )(input1)
 hidden1d = keras.layers.Dropout(0.01, seed=101, name='dropout1')(hidden1)
-hidden2 = keras.layers.Dense(
-    25, activation='relu',
-    kernel_regularizer=keras.regularizers.L1L2(l1=1e-5, l2=1e-4),
-    bias_regularizer=keras.regularizers.L2(1e-4),
-    activity_regularizer=keras.regularizers.L2(1e-5),
-    name='hidden2',
-)(hidden1d)
-hidden2d = keras.layers.Dropout(0.01, seed=101, name='dropout2')(hidden2)
 hidden3 = keras.layers.Dense(
-    10, activation='sigmoid',
+    2, activation='sigmoid',
     kernel_regularizer=keras.regularizers.L1L2(l1=1e-5, l2=1e-4),
     bias_regularizer=keras.regularizers.L2(1e-4),
     activity_regularizer=keras.regularizers.L2(1e-5),
     name='hidden3',
-)(hidden2d)
+)(hidden1d)
 hidden3d = keras.layers.Dropout(0.01, seed=101, name='dropout3')(hidden3)
-hidden4 = keras.layers.Dense(
-    25, activation='relu',
-    kernel_regularizer=keras.regularizers.L1L2(l1=1e-5, l2=1e-4),
-    bias_regularizer=keras.regularizers.L2(1e-4),
-    activity_regularizer=keras.regularizers.L2(1e-5),
-    name='hidden4',
-)(hidden3d)
-hidden4d = keras.layers.Dropout(0.01, seed=101, name='dropout4')(hidden4)
 hidden5 = keras.layers.Dense(
-    250, activation='relu',
+    500, activation='relu',
     kernel_regularizer=keras.regularizers.L1L2(l1=1e-5, l2=1e-4),
     bias_regularizer=keras.regularizers.L2(1e-4),
     activity_regularizer=keras.regularizers.L2(1e-5),
     name='hidden5',
-)(hidden4d)
+)(hidden3d)
 hidden5d = keras.layers.Dropout(0.01, seed=101, name='dropout5')(hidden5)
 output1 = keras.layers.Dense(ae_features_1, activation='linear', name='output1')(hidden5d)
 output2 = keras.layers.Dense(ae_features_2, activation='linear', name='output2')(hidden5d)
@@ -85,20 +69,20 @@ model = keras.Model(inputs=input1, outputs=[output1, output2, output3, output4],
 
 model.compile(
     loss=[
-        keras.losses.MeanSquaredError(name='MSE'),
-        keras.losses.MeanSquaredError(name='MSE'),
+        keras.losses.MeanAbsoluteError(name='MSE'),
+        keras.losses.MeanAbsoluteError(name='MSE'),
         keras.losses.BinaryCrossentropy(name='CEN'),
-        keras.losses.MeanSquaredError(name='MSE'),
+        keras.losses.MeanAbsoluteError(name='MSE'),
     ],
     optimizer=keras.optimizers.Adam(),
+    loss_weights=[1, 0.25, 1, 0.1],
 )
-
-# Fit Model:
 
 model.fit(
     train_X,
     [ae_train_X1, ae_train_X2, ae_train_X3, ae_train_X4],
-    epochs=250,
+    epochs=50,
+    batch_size=16,
 )
 
 # Predict for Train Data:
@@ -135,7 +119,7 @@ pd.DataFrame(
 ).to_csv(
     'data/impute/train_X.csv',
     index=False,
-    float_format="%.15f",
+    float_format='%.15f',
 )
 
 pd.DataFrame(
@@ -144,7 +128,7 @@ pd.DataFrame(
 ).to_csv(
     'data/impute/test_X.csv',
     index=False,
-    float_format="%.15f",
+    float_format='%.15f',
 )
 
 pd.DataFrame(
@@ -153,7 +137,7 @@ pd.DataFrame(
 ).to_csv(
     'data/impute/pred/train_X.csv',
     index=False,
-    float_format="%.15f",
+    float_format='%.15f',
 )
 
 pd.Series(
@@ -162,7 +146,7 @@ pd.Series(
 ).to_csv(
     'data/impute/pred/train_y.csv',
     index=False,
-    float_format="%.15f",
+    float_format='%.15f',
 )
 
 pd.DataFrame(
@@ -171,7 +155,7 @@ pd.DataFrame(
 ).to_csv(
     'data/impute/pred/test_X.csv',
     index=False,
-    float_format="%.15f",
+    float_format='%.15f',
 )
 
 pd.Series(
@@ -180,5 +164,5 @@ pd.Series(
 ).to_csv(
     'data/impute/pred/test_y.csv',
     index=False,
-    float_format="%.15f",
+    float_format='%.15f',
 )

@@ -75,7 +75,7 @@ pd.DataFrame(
 ).to_csv(
     'data/pca/train_X.csv',
     index=False,
-    float_format="%.15f",
+    float_format='%.15f',
 )
 
 pd.DataFrame(
@@ -84,14 +84,14 @@ pd.DataFrame(
 ).to_csv(
     'data/pca/test_X.csv',
     index=False,
-    float_format="%.15f",
+    float_format='%.15f',
 )
 
 # Predict:
 
 keras.utils.set_random_seed(100)
 
-model = keras.saving.load_model("data/predict/model/model.keras")
+model = keras.saving.load_model('data/predict/model/model.keras')
 
 train_y_pred = model.predict(train_X_fixed)[:, 0]
 test_y_pred = model.predict(test_X_fixed)[:, 0]
@@ -111,7 +111,7 @@ pd.Series(
 ).to_csv(
     'data/pca/train_y.csv',
     index=False,
-    float_format="%.15f",
+    float_format='%.15f',
 )
 
 pd.Series(
@@ -120,7 +120,7 @@ pd.Series(
 ).to_csv(
     'data/pca/test_y.csv',
     index=False,
-    float_format="%.15f",
+    float_format='%.15f',
 )
 
 pd.Series(
@@ -129,7 +129,7 @@ pd.Series(
 ).to_csv(
     'data/pca/transform/train_y.csv',
     index=False,
-    float_format="%.15f",
+    float_format='%.15f',
 )
 
 pd.Series(
@@ -138,7 +138,7 @@ pd.Series(
 ).to_csv(
     'data/pca/transform/test_y.csv',
     index=False,
-    float_format="%.15f",
+    float_format='%.15f',
 )
 
 pd.Series(
@@ -150,5 +150,5 @@ pd.Series(
     name='SalePrice',
 ).to_csv(
     'output/submission5.csv',
-    float_format="%.15f",
+    float_format='%.15f',
 )
