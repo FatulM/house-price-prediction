@@ -2,8 +2,6 @@
 
 from _imports import *
 
-import keras
-
 Path('data/predict/').mkdir(parents=True, exist_ok=True)
 Path('data/predict/model/').mkdir(parents=True, exist_ok=True)
 Path('data/predict/transform/').mkdir(parents=True, exist_ok=True)

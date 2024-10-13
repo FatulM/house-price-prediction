@@ -2,10 +2,10 @@
 
 from _imports import *
 
-import keras
-
 Path('data/pca/').mkdir(parents=True, exist_ok=True)
 Path('data/pca/transform/').mkdir(parents=True, exist_ok=True)
+
+keras.utils.set_random_seed(100)
 
 # Load Data:
 
@@ -88,8 +88,6 @@ pd.DataFrame(
 )
 
 # Predict:
-
-keras.utils.set_random_seed(100)
 
 model = keras.saving.load_model('data/predict/model/model.keras')
 

@@ -8,6 +8,7 @@ import random
 import json
 import warnings
 import pickle
+
 from pprint import pprint
 from collections import *
 from typing import Any, Tuple
@@ -15,34 +16,34 @@ from pathlib import Path
 
 import numpy as np
 import numpy.typing as npt
-import numpy.lib
-import numpy.random
-import numpy.linalg
-import numpy.fft
-import numpy.polynomial
+# import numpy.lib
+# import numpy.random
+# import numpy.linalg
+# import numpy.fft
+# import numpy.polynomial
 
 import pandas as pd
 from pandas.plotting import *
 
 import scipy
-import scipy.cluster
-import scipy.constants
-import scipy.datasets
-import scipy.fft
-import scipy.fftpack
-import scipy.integrate
-import scipy.interpolate
-import scipy.io
-import scipy.linalg
-import scipy.misc
-import scipy.ndimage
-import scipy.odr
-import scipy.optimize
-import scipy.signal
-import scipy.sparse
-import scipy.spatial
-import scipy.special
-import scipy.stats
+# import scipy.cluster
+# import scipy.constants
+# import scipy.datasets
+# import scipy.fft
+# import scipy.fftpack
+# import scipy.integrate
+# import scipy.interpolate
+# import scipy.io
+# import scipy.linalg
+# import scipy.misc
+# import scipy.ndimage
+# import scipy.odr
+# import scipy.optimize
+# import scipy.signal
+# import scipy.sparse
+# import scipy.spatial
+# import scipy.special
+# import scipy.stats
 
 import matplotlib.pyplot as plt
 import matplotlib as mpl
@@ -124,6 +125,41 @@ from sklearn.utils.validation import *
 
 import joblib
 
+# Keras:
+
+import jax
+
+os.environ['KERAS_BACKEND'] = 'jax'
+
+import keras
+
+# import keras.api.activations
+# import keras.api.applications
+# import keras.api.backend
+# import keras.api.callbacks
+# import keras.api.config
+# import keras.api.constraints
+# import keras.api.datasets
+# import keras.api.distribution
+# import keras.api.dtype_policies
+# import keras.api.export
+# import keras.api.initializers
+# import keras.api.layers
+# import keras.api.legacy
+# import keras.api.losses
+# import keras.api.metrics
+# import keras.api.mixed_precision
+# import keras.api.models
+# import keras.api.ops
+# import keras.api.optimizers
+# import keras.api.preprocessing
+# import keras.api.quantizers
+# import keras.api.random
+# import keras.api.regularizers
+# import keras.api.saving
+# import keras.api.tree
+# import keras.api.utils
+
 # Configs:
 
 sns.set_theme(style='ticks', rc={'figure.figsize': (5, 5)})
@@ -140,5 +176,3 @@ plt.rc('xtick', labelsize=SMALL_SIZE)
 plt.rc('ytick', labelsize=SMALL_SIZE)
 plt.rc('legend', fontsize=SMALL_SIZE)
 plt.rc('figure', titlesize=BIGGER_SIZE)
-
-os.environ['KERAS_BACKEND'] = 'jax'

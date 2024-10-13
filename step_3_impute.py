@@ -2,8 +2,6 @@
 
 from _imports import *
 
-import keras
-
 Path('data/impute/').mkdir(parents=True, exist_ok=True)
 Path('data/impute/model/').mkdir(parents=True, exist_ok=True)
 Path('data/impute/pred/').mkdir(parents=True, exist_ok=True)
