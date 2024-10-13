@@ -43,21 +43,13 @@ hidden1 = keras.layers.Dense(
     name='hidden1',
 )(input1)
 hidden1d = keras.layers.Dropout(0.01, seed=101, name='dropout1')(hidden1)
-hidden3 = keras.layers.Dense(
-    2, activation='sigmoid',
-    kernel_regularizer=keras.regularizers.L1L2(l1=1e-5, l2=1e-4),
-    bias_regularizer=keras.regularizers.L2(1e-4),
-    activity_regularizer=keras.regularizers.L2(1e-5),
-    name='hidden3',
-)(hidden1d)
-hidden3d = keras.layers.Dropout(0.01, seed=101, name='dropout3')(hidden3)
 hidden5 = keras.layers.Dense(
     500, activation='relu',
     kernel_regularizer=keras.regularizers.L1L2(l1=1e-5, l2=1e-4),
     bias_regularizer=keras.regularizers.L2(1e-4),
     activity_regularizer=keras.regularizers.L2(1e-5),
     name='hidden5',
-)(hidden3d)
+)(hidden1d)
 hidden5d = keras.layers.Dropout(0.01, seed=101, name='dropout5')(hidden5)
 output1 = keras.layers.Dense(ae_features_1, activation='linear', name='output1')(hidden5d)
 output2 = keras.layers.Dense(ae_features_2, activation='linear', name='output2')(hidden5d)
@@ -73,13 +65,13 @@ model.compile(
         keras.losses.MeanAbsoluteError(name='MSE'),
     ],
     optimizer=keras.optimizers.Adam(learning_rate=0.0005),
-    loss_weights=[1, 0.25, 1, 0.1],
+    loss_weights=[0.48, 0.09, 0.39, 0.04],
 )
 
 model.fit(
     train_X,
     [ae_train_X1, ae_train_X2, ae_train_X3, ae_train_X4],
-    epochs=150,
+    epochs=250,
     batch_size=8,
 )
 

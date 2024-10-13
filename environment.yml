@@ -189,3 +189,4 @@ dependencies:
   - python-lsp-server
   - rpy2
   - pymc
+  - shap

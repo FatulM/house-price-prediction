@@ -53,7 +53,7 @@ model.compile(
 model.fit(
     train_X,
     train_y,
-    epochs=150,
+    epochs=250,
     batch_size=8,
 )
 
