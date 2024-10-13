@@ -6,7 +6,7 @@ Path('data/impute/').mkdir(parents=True, exist_ok=True)
 Path('data/impute/model/').mkdir(parents=True, exist_ok=True)
 Path('data/impute/pred/').mkdir(parents=True, exist_ok=True)
 
-keras.utils.set_random_seed(110)
+keras.utils.set_random_seed(1)
 
 # Load Data:
 
@@ -72,15 +72,15 @@ model.compile(
         keras.losses.BinaryCrossentropy(name='CEN'),
         keras.losses.MeanAbsoluteError(name='MSE'),
     ],
-    optimizer=keras.optimizers.Adam(),
+    optimizer=keras.optimizers.Adam(learning_rate=0.0005),
     loss_weights=[1, 0.25, 1, 0.1],
 )
 
 model.fit(
     train_X,
     [ae_train_X1, ae_train_X2, ae_train_X3, ae_train_X4],
-    epochs=50,
-    batch_size=16,
+    epochs=150,
+    batch_size=8,
 )
 
 # Predict for Train Data:

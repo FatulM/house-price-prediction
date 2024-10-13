@@ -5,16 +5,14 @@ from _imports import *
 Path('data/predict/').mkdir(parents=True, exist_ok=True)
 Path('data/predict/model/').mkdir(parents=True, exist_ok=True)
 Path('data/predict/transform/').mkdir(parents=True, exist_ok=True)
+Path('output/').mkdir(parents=True, exist_ok=True)
 
-keras.utils.set_random_seed(100)
+keras.utils.set_random_seed(1)
 
 # Load Data:
 
-train_X: np.ndarray = pd.read_csv('data/preprocess/train_X.csv').to_numpy()
-test_X: np.ndarray = pd.read_csv('data/preprocess/test_X.csv').to_numpy()
-
-train_X_fixed: np.ndarray = pd.read_csv('data/impute/train_X.csv').to_numpy()
-test_X_fixed: np.ndarray = pd.read_csv('data/impute/test_X.csv').to_numpy()
+train_X: np.ndarray = pd.read_csv('data/impute/train_X.csv').to_numpy()
+test_X: np.ndarray = pd.read_csv('data/impute/test_X.csv').to_numpy()
 
 train_y: np.ndarray = pd.read_csv('data/preprocess/train_y.csv').iloc[:, 0].to_numpy()
 
@@ -45,7 +43,7 @@ model = keras.Sequential([
 
 model.compile(
     loss=keras.losses.MeanSquaredError(name='MSE'),
-    optimizer=keras.optimizers.Adam(),
+    optimizer=keras.optimizers.Adam(learning_rate=0.0005),
     metrics=[
         keras.metrics.RootMeanSquaredError(name='RMSE'),
         keras.metrics.MeanAbsoluteError(name='MAE'),
@@ -53,21 +51,16 @@ model.compile(
 )
 
 model.fit(
-    train_X,  # TODO: HOW ? Why not use fixed ?
+    train_X,
     train_y,
-    epochs=100,
+    epochs=150,
     batch_size=8,
 )
 
-# Load Model:
-# (This is commented out ...)
-
-# model = keras.saving.load_model('data/predict/model/model.keras')
-
 # Predict:
 
-train_y_pred = model.predict(train_X_fixed)[:, 0]
-test_y_pred = model.predict(test_X_fixed)[:, 0]
+train_y_pred = model.predict(train_X)[:, 0]
+test_y_pred = model.predict(test_X)[:, 0]
 
 # Transform target:
 
@@ -124,6 +117,6 @@ pd.Series(
     data=test_y_pred_t,
     name='SalePrice',
 ).to_csv(
-    'output/submission4.csv',
+    'output/submission.csv',
     float_format='%.15f',
 )
