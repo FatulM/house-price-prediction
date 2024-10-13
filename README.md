@@ -47,6 +47,7 @@ There are some ipython notebooks which I used to explore different topics in the
   applying PCA to it.
 - notebooks/keras-mlp.ipynb: Using Keras to build an MLP to make prediction.
 - notebooks/mlp.ipynb: Using scikit-learn MLP to make prediction.
+- notebooks/mlp-feature-importance.ipynb: Finding feature importances using a neural network model trained using Keras.
 - notebooks/mlp-learning-rate.ipynb: Finding optimal learning rate for model training.
 - notebooks/pca-lda-old.ipynb: Multiple different lower dimension embedding techniques such as PCA and LDA to visualize
   data in 2 and 3 dimensions. This is done when I didn't add ordinal features as ordinarily encoded when preprocessing
